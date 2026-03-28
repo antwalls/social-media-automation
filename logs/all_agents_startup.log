@@ -1,0 +1,124 @@
+
+🚀 Social Media Automation — Flujo completo
+============================================
+
+┌─────────────────────────────────────────┐
+│  Paso 1/2: 🔍 Trends Research Agent     │
+└─────────────────────────────────────────┘
+Buscando trending topics y creando tareas en Notion...
+
+⏩ Saltando búsqueda de tendencias (usando tareas existentes)
+
+✅ Trends Agent terminado. Tareas creadas en Notion.
+
+┌─────────────────────────────────────────┐
+│  Paso 2/2: Agentes de contenido         │
+│  (Newsletter, Instagram, TikTok, Blog)  │
+└─────────────────────────────────────────┘
+Lanzando los 4 agentes en paralelo...
+
+  📧 Newsletter Agent (PID: 32157)
+  📸 Instagram Agent  (PID: 32158)
+  🎵 TikTok Agent     (PID: 32159)
+  ✍️  Blog Agent       (PID: 32160)
+
+Esperando a que terminen todos... (Ctrl+C para abortar y matar todos)
+🎵 Lanzando TikTok Creator Agent...
+📧 Lanzando Newsletter Writer Agent...
+   Leerá tareas de Notion (Canal: TikTok, Status: Pendiente) y generará scripts.
+
+   Leerá tareas de Notion (Canal: Newsletter, Status: Pendiente) y generará drafts.
+
+✍️  Lanzando Blog Writer Agent...
+📸 Lanzando Instagram Creator Agent...
+   Leerá tareas de Notion (Canal: Blog, Status: Pendiente) y generará artículos.
+
+   Leerá tareas de Notion (Canal: Instagram, Status: Pendiente) y generará drafts.
+
+
+🤖 Ejecutando agente: agents/instagram-creator.md
+   Modelo: qwen/qwen3.5-9b
+   LLM endpoint: http://127.0.0.1:1234/v1
+
+🔄 Iteración 1/15...
+❌ Error API (400): {"error":"Context size has been exceeded."}
+Traceback (most recent call last):
+  File "/Users/aparedes.qbitify/new_source/social-media-automation/scripts/agent_runner.py", line 222, in <module>
+    main()
+  File "/Users/aparedes.qbitify/new_source/social-media-automation/scripts/agent_runner.py", line 218, in main
+    execute_agent(args.agent)
+  File "/Users/aparedes.qbitify/new_source/social-media-automation/scripts/agent_runner.py", line 174, in execute_agent
+    response = call_llm(messages)
+  File "/Users/aparedes.qbitify/new_source/social-media-automation/scripts/agent_runner.py", line 119, in call_llm
+    resp.raise_for_status()
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages/requests/models.py", line 1021, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: http://127.0.0.1:1234/v1/chat/completions
+
+🤖 Ejecutando agente: agents/newsletter-writer.md
+   Modelo: qwen/qwen3.5-9b
+   LLM endpoint: http://127.0.0.1:1234/v1
+
+🔄 Iteración 1/15...
+❌ Error API (400): {"error":"Context size has been exceeded."}
+Traceback (most recent call last):
+  File "/Users/aparedes.qbitify/new_source/social-media-automation/scripts/agent_runner.py", line 222, in <module>
+
+🤖 Ejecutando agente: agents/blog-writer.md
+   Modelo: qwen/qwen3.5-9b
+   LLM endpoint: http://127.0.0.1:1234/v1
+
+🔄 Iteración 1/15...
+❌ Error API (400): {"error":"Context size has been exceeded."}
+Traceback (most recent call last):
+  File "/Users/aparedes.qbitify/new_source/social-media-automation/scripts/agent_runner.py", line 222, in <module>
+    main()
+  File "/Users/aparedes.qbitify/new_source/social-media-automation/scripts/agent_runner.py", line 218, in main
+    execute_agent(args.agent)
+  File "/Users/aparedes.qbitify/new_source/social-media-automation/scripts/agent_runner.py", line 174, in execute_agent
+    main()
+  File "/Users/aparedes.qbitify/new_source/social-media-automation/scripts/agent_runner.py", line 218, in main
+    response = call_llm(messages)
+  File "/Users/aparedes.qbitify/new_source/social-media-automation/scripts/agent_runner.py", line 119, in call_llm
+    execute_agent(args.agent)
+  File "/Users/aparedes.qbitify/new_source/social-media-automation/scripts/agent_runner.py", line 174, in execute_agent
+    resp.raise_for_status()
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages/requests/models.py", line 1021, in raise_for_status
+    response = call_llm(messages)
+  File "/Users/aparedes.qbitify/new_source/social-media-automation/scripts/agent_runner.py", line 119, in call_llm
+    resp.raise_for_status()
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages/requests/models.py", line 1021, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: http://127.0.0.1:1234/v1/chat/completions
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: http://127.0.0.1:1234/v1/chat/completions
+
+🤖 Ejecutando agente: agents/tiktok-creator.md
+   Modelo: qwen/qwen3.5-9b
+   LLM endpoint: http://127.0.0.1:1234/v1
+
+🔄 Iteración 1/15...
+❌ Error API (400): {"error":"Context size has been exceeded."}
+Traceback (most recent call last):
+  File "/Users/aparedes.qbitify/new_source/social-media-automation/scripts/agent_runner.py", line 222, in <module>
+    main()
+  File "/Users/aparedes.qbitify/new_source/social-media-automation/scripts/agent_runner.py", line 218, in main
+    execute_agent(args.agent)
+  File "/Users/aparedes.qbitify/new_source/social-media-automation/scripts/agent_runner.py", line 174, in execute_agent
+    response = call_llm(messages)
+  File "/Users/aparedes.qbitify/new_source/social-media-automation/scripts/agent_runner.py", line 119, in call_llm
+    resp.raise_for_status()
+  File "/Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages/requests/models.py", line 1021, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 400 Client Error: Bad Request for url: http://127.0.0.1:1234/v1/chat/completions
+  ⚠️  Newsletter Agent terminó con error
+  ⚠️  Instagram Agent terminó con error
+  ⚠️  TikTok Agent terminó con error
+  ⚠️  Blog Agent terminó con error
+
+============================================
+✅ Flujo completo terminado.
+   Revisa los drafts en tu Notion Board:
+   Filtra por Status = 'Draft Listo'
+============================================
+

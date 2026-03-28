@@ -1,0 +1,107 @@
+#!/usr/bin/env python3
+"""
+web_search — Herramienta de búsqueda web para los agentes
+Usa DuckDuckGo (sin API key) o Brave Search si está configurado.
+
+Uso:
+  web_search "query aquí"
+  web_search --query "query" --max 5
+"""
+import argparse
+import json
+import os
+import ssl
+import sys
+import urllib.parse
+import urllib.request
+
+# Fix SSL macOS: certificados no instalados
+SSL_CTX = ssl.create_default_context()
+SSL_CTX.check_hostname = False
+SSL_CTX.verify_mode = ssl.CERT_NONE
+
+try:
+    import requests as _requests
+    _HAS_REQUESTS = True
+except ImportError:
+    _HAS_REQUESTS = False
+
+
+def _get(url: str, headers: dict = None, timeout: int = 10) -> bytes:
+    """HTTP GET con requests o urllib, con SSL tolerante."""
+    if _HAS_REQUESTS:
+        r = _requests.get(url, headers=headers or {}, timeout=timeout, verify=False)
+        return r.content
+    req = urllib.request.Request(url, headers=headers or {"User-Agent": "SocialMediaBot/1.0"})
+    with urllib.request.urlopen(req, timeout=timeout, context=SSL_CTX) as resp:
+        return resp.read()
+
+def search_duckduckgo(query: str, max_results: int = 5) -> list[dict]:
+    """Búsqueda usando la API de DuckDuckGo (gratis, sin key)."""
+    encoded = urllib.parse.quote(query)
+    url = f"https://api.duckduckgo.com/?q={encoded}&format=json&no_html=1&skip_disambig=1"
+    try:
+        raw  = _get(url, {"User-Agent": "SocialMediaBot/1.0"})
+        data = json.loads(raw.decode())
+        results = []
+        if data.get("AbstractText"):
+            results.append({"title": data.get("Heading", query), "snippet": data["AbstractText"], "url": data.get("AbstractURL","")})
+        for topic in data.get("RelatedTopics", [])[:max_results]:
+            if isinstance(topic, dict) and "Text" in topic:
+                results.append({"title": topic.get("Text","")[:80], "snippet": topic.get("Text",""), "url": topic.get("FirstURL","")})
+        return results[:max_results] or [{"title": "Sin resultados", "snippet": f"Búsqueda: {query}", "url": "https://duckduckgo.com/?q=" + encoded}]
+    except Exception as e:
+        return [{"title": "Error DDG", "snippet": str(e), "url": ""}]
+
+
+def search_brave(query: str, api_key: str, max_results: int = 5) -> list[dict]:
+    """Búsqueda usando Brave Search API."""
+    encoded = urllib.parse.quote(query)
+    url = f"https://api.search.brave.com/res/v1/web/search?q={encoded}&count={max_results}"
+    try:
+        raw  = _get(url, {"Accept": "application/json", "X-Subscription-Token": api_key})
+        data = json.loads(raw.decode())
+        return [{"title": r.get("title",""), "snippet": r.get("description",""), "url": r.get("url","")}
+                for r in data.get("web",{}).get("results",[])[:max_results]]
+    except Exception as e:
+        return [{"title": "Error Brave", "snippet": str(e), "url": ""}]
+
+
+def main():
+    parser = argparse.ArgumentParser(description="Búsqueda web para agentes")
+    parser.add_argument("query", nargs="?", help="Query de búsqueda")
+    parser.add_argument("--query", "-q", dest="query_flag", help="Query de búsqueda")
+    parser.add_argument("--max", "--limit", type=int, default=5, dest="max", help="Número máximo de resultados")
+    # Ignorar flags no soportados del agente
+    parser.add_argument("--sources", default="", help="(ignorado)")
+    parser.add_argument("--region", default="", help="(ignorado)")
+    parser.add_argument("--hl", default="", help="(ignorado)")
+    parser.add_argument("--lang", default="", help="(ignorado)")
+    args = parser.parse_args()
+
+    query = args.query or args.query_flag
+    if not query:
+        print("❌ Debes especificar una query")
+        sys.exit(1)
+
+    # Elegir motor
+    brave_key = os.getenv("BRAVE_SEARCH_API_KEY", "")
+    if brave_key and not brave_key.startswith("BSA"):
+        results = search_brave(query, brave_key, args.max)
+    else:
+        results = search_duckduckgo(query, args.max)
+
+    # Output en formato legible para el agente
+    print(f"Resultados para: {query}\n")
+    for i, r in enumerate(results, 1):
+        print(f"{i}. {r['title']}")
+        print(f"   URL: {r['url']}")
+        print(f"   {r['snippet'][:200]}")
+        print()
+
+    if not results:
+        print("Sin resultados encontrados.")
+
+
+if __name__ == "__main__":
+    main()
